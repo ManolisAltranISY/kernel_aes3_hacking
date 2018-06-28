@@ -1,0 +1,111 @@
+#include <linux/kernel.h>
+#include <linux/fs.h>
+#include <linux/string.h>
+#include <linux/module.h>
+#include <linux/errno.h>
+#include <linux/mm.h>
+#include <linux/vmalloc.h>
+#include <linux/mman.h>
+#include <linux/wrapper.h>
+#include <linux/slab.h>
+#include <asm/io.h>
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("EMMANOUIL NIKOLAKAKIS");
+MODULE_DESCRIPTION("Do-nothing test driver");
+MODULE_VERSION("0.1");
+
+#define LEN (64*1024)
+
+/* device open */
+int mmapdrv_open(struct inode *inode, struct file *file);
+/* device close */
+int mmapdrv_release(struct inode *inode, struct file *file);
+/* device mmap */
+int mmapdrv_mmap(struct file *file, struct vm_area_struct *vma);
+
+/* open handler for vm area */
+void mmap_drv_vopen(struct vm_area_struct *vma);
+/* close handler form vm area */
+void mmap_drv_vclose(struct vm_area_struct *vma);
+/* page fault handler for callback of vmalloc area */
+struct page *mmap_drv_vmmap(struct vm_area_struct *vma, unsigned long address, int write_access);
+
+
+/* the ordinary device operations */
+
+static struct file_operations mmapdrv_fops =
+{
+  mmap:    mmapdrv_mmap,
+  open:    mmapdrv_open,
+  release: mmapdrv_release,
+};
+
+/* memory handler functions */
+
+static struct vm_operations_struct mmap_drv_vm_ops = {
+  open:    mmap_drv_vopen, /* mmap-open */
+  close:  mmap_drv_vclose,/* mmap-close */
+  nopage: mmap_drv_vmmap, /* no-page fault handler */
+};
+
+/* pointer to page aligned area */
+static int *vmalloc_area = NULL;
+/* pointer to unaligend area */
+static int *vmalloc_ptr  = NULL;
+/* pointer to page aligned area */
+static int *kmalloc_area = NULL;
+/* pointer to unaligned area */
+static int *kmalloc_ptr = NULL;
+
+/* major number of device */
+static int major;
+
+volatile void *virt_to_kseg(volatile void *address)
+{
+   pgd_t *pgd; 
+   pmd_t *pmd; 
+   pte_t *ptep, pte;
+	unsigned long va, ret = 0UL;
+	va=VMALLOC_VMADDR((unsigned long)address);	
+	pgd = pgd_offset_k(va); // get the page directory. Use the kernel memory map.
+	 
+	/* check whether we found an entry */
+	
+	if (!pgd_none(*pgd))
+   {
+	      pmd = pmd_offset(pgd, va); // get the page middle directory 
+	      if (!pmd_none(*pmd)) // check whether we found an entry
+         {
+	          ptep = pte_offset(pmd, va); //get a pointer to the page table entry 
+	          pte = *ptep;
+	          if (pte_present(pte)) //check if page is valid
+             {
+		       ret = (unsigned long)page_address(pte_page(pte)); // get the address the page is refering to 
+			    ret |= (va & (PAGE_SIZE -1)); /* add the offset within the page to the page address */
+		       }
+	      }
+	}
+	return((volatile void *)ret);
+}
+
+static int __init hello_init(void){
+    printk(KERN_INFO "Hello, world. This is Manolis!\n")
+    
+	 vma->flags |= VM_LOCKED;    
+
+	 if (remap_page_range(vma->vm_start, virt_to_phys((void*)((unsigned long)kmalloc_area)), size, PAGE_SHARED)){
+	 	 printk("remap page range failed\n");
+		 return -ENXIO;	 	 
+	 }    
+    
+    
+    return 0;
+}
+
+static void __exit hello_exit(void){
+    printk(KERN_INFO "Goodbye, world. Manolis out!\n");
+}
+
+module_init(hello_init);
+module_exit(hello_exit);
