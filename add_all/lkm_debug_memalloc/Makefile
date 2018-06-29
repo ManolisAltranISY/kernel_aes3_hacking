@@ -1,8 +1,8 @@
-obj-m+= k_novirt.o
+obj-m+= updated_kmalloc.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build/ M=${PWD} modules
-	$(CC) u_mem.c -o u_mem
+	$(CC) updated_ukmalloc.c -o updated_ukmalloc
 clean:
 	make -C /lib/modules/$(shell uname -r)/build/ M=${PWD} clean
-	rm u_mem
+	rm updated_ukmalloc

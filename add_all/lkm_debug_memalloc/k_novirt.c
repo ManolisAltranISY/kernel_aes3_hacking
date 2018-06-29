@@ -1,9 +1,5 @@
 #include <linux/version.h>
 #include <linux/module.h>
-#if defined(MODVERSIONS)
-#include <linux/modversions.h>
-#endif
-
 #include <linux/kernel.h>
 #include <linux/fs.h>
 #include <linux/string.h>
@@ -11,12 +7,13 @@
 #include <linux/errno.h>
 #include <linux/mm.h>
 #include <linux/mman.h>
-#include <asm/uaccess.h>
+//#include <asm/uaccess.h>
 #include <linux/init.h>
 //#include <linux/wrapper.h>
-#include <linux/vmalloc.h>
 #include <linux/slab.h>
 #include <asm/io.h>
+#include <asm/mmzone.h>
+#include <asm/page.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("EMMANOUIL NIKOLAKAKIS");
@@ -76,7 +73,7 @@ static int __init hello_init(void){
    }
 
    printk("kmalloc_area at 0x%p (phys 0x%lx)\n", kmalloc_area,
-   virt_to_phys((void *)virt_to_kseg(kmalloc_area)));
+   virt_to_phys((void *)virt_to_page(kmalloc_area)));
 
    return 0;
 }
@@ -89,7 +86,7 @@ static void __exit hello_exit(void){
                 mem_map_unreserve(virt_to_page(virt_addr));
   }
 
-  mem_map_unreserve(virt_to_page(virt_to_kseg((void *)virt_addr)));
+  mem_map_unreserve((virt_to_page((void *)virt_addr)));
 
   if (kmalloc_ptr) {
     kfree(kmalloc_ptr);
@@ -101,14 +98,14 @@ static void __exit hello_exit(void){
 /* device open method */
 int mmapdrv_open(struct inode *inode, struct file *file)
 {
-        MOD_INC_USE_COUNT;
+        // potentially add code
         return(0);
 }
 
 /* device close method */
 int mmapdrv_release(struct inode *inode, struct file *file)
 {
-        MOD_DEC_USE_COUNT;
+        // potentially add code
         return(0);
 }
 
@@ -116,15 +113,12 @@ int mmapdrv_release(struct inode *inode, struct file *file)
 int mmapdrv_mmap(struct file *file, struct vm_area_struct *vma)
 {
   unsigned long offset = vma->vm_pgoff<<PAGE_SHIFT;
-
   unsigned long size = vma->vm_end - vma->vm_start;
-
   if (offset & ~PAGE_MASK)
   {
                 printk("offset not aligned: %ld\n", offset);
                 return -ENXIO;
   }
-
   if (size>LEN)
   {
                 printk("size too big\n");
@@ -146,14 +140,18 @@ int mmapdrv_mmap(struct file *file, struct vm_area_struct *vma)
   if (offset == LEN)
   {
     /* enter pages into mapping of application */
-    if (remap_page_range(vma->vm_start, virt_to_phys((void*)((unsigned long)kmalloc_area)), size, PAGE_SHARED)) {
+
+    //int remap_pfn_range(struct vm_area_struct *vma, unsigned long from, unsigned long pfn, unsigned long size, pgprot_t prot)
+    //ret = remap_pfn_range(vma, vma->vm_start, page_to_pfn((void*)((unsigned long)kmalloc_area)), size, vma->vm_page_prot);
+    if (remap_pfn_range(vma, vma->vm_start, page_to_pfn((void*)((unsigned long)kmalloc_area)), size, vma->vm_page_prot)) {
       printk("remap page range failed\n");
       return -ENXIO;
     } else {
       printk("offset out of range\n");
       return -ENXIO;
     }
-    return(0);
+  }
+  return 0;
 }
 
 module_init(hello_init);

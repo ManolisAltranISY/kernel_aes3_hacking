@@ -1,0 +1,3 @@
+/home/manolis/Thales_BB/rpi_exercise/linux_kernel_exercises/add_all/lkm_debug_memalloc/updated_kmalloc.ko
+/home/manolis/Thales_BB/rpi_exercise/linux_kernel_exercises/add_all/lkm_debug_memalloc/updated_kmalloc.o
+
