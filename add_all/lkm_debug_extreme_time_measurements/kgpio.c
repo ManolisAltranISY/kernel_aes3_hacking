@@ -60,12 +60,12 @@ static void __exit hello_exit(void){
 static irq_handler_t gpio_irq_handler(unsigned int irq, void *dev_id, struct pt_regs *regs){
    message[count] = gpio_get_value(gpioTest);
    count++;
-   if (count > 15) {
+   if (count > 63) {
      getnstimeofday(&ts_current);
      ts_diff = timespec_sub(ts_current, ts_last); //determine the difference between last two state changes
      ts_last = ts_current; //current time is the last time as ts_last
      printk(KERN_INFO "GPIO_TEST: Time required to get the latest 64 edges is %lu, %lu)\n", ts_diff.tv_sec, ts_diff.tv_nsec);
-     for (count2 = 0; count2 < 16; count2++){
+     for (count2 = 0; count2 < 64; count2++){
        printk(KERN_INFO "GPIO_TEST: Input number %d (button state is %d)\n", count2, message[count2]);
      }
      getnstimeofday(&ts_current); //gets current time as ts_current
