@@ -1,0 +1,1 @@
+cmd_/home/Manolis/Thales_AES3/lkm_exercise_chardevice_test/kernelspace_hello.ko := ld -EL -r  -T ./scripts/module-common.lds --build-id  -o /home/Manolis/Thales_AES3/lkm_exercise_chardevice_test/kernelspace_hello.ko /home/Manolis/Thales_AES3/lkm_exercise_chardevice_test/kernelspace_hello.o /home/Manolis/Thales_AES3/lkm_exercise_chardevice_test/kernelspace_hello.mod.o ;  true

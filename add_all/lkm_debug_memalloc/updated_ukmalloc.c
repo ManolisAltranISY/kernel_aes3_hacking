@@ -14,6 +14,7 @@
  #include <fcntl.h>
 
 #define LEN (64*1024)
+#define DEVICE_FILENAME "/dev/kbuffer_aes3"
 
 /* this is a test program that opens the mmap_drv. It reads out values of the kmalloc() and vmalloc()
    allocated areas and checks for correctness. You need a device special file to access the driver.
@@ -28,7 +29,7 @@ int main(void)
 
   int fd;
   unsigned int *kadr;
-  if ((fd=open("node", O_RDWR))<0)
+  if ((fd=open(DEVICE_FILENAME, O_RDWR))<0)
   {
     perror("open problem");
     return -1;
@@ -47,7 +48,7 @@ int main(void)
       || (kadr[LEN/sizeof(int)-1]!=(0xbeef0000+LEN/sizeof(int)-2)))
   {
     printf("0x%x 0x%x\n", kadr[0], kadr[1]);
-    printf("0x%x 0x%x\n", kadr[LEN/sizeof(int)-2], kadr[LEN/sizeof(int)-1]);
+    // printf("0x%x 0x%x\n", kadr[LEN/sizeof(int)-2], kadr[LEN/sizeof(int)-1]);
   }
 
   close(fd);
