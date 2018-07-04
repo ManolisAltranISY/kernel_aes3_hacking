@@ -1,0 +1,1 @@
+cmd_/home/Manolis/Thales_AES3/lkm_exercise_gpio/kgpio.ko := ld -EL -r  -T ./scripts/module-common.lds --build-id  -o /home/Manolis/Thales_AES3/lkm_exercise_gpio/kgpio.ko /home/Manolis/Thales_AES3/lkm_exercise_gpio/kgpio.o /home/Manolis/Thales_AES3/lkm_exercise_gpio/kgpio.mod.o ;  true

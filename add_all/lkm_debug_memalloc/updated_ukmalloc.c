@@ -16,9 +16,9 @@
 #define LEN (64*1024)
 #define DEVICE_FILENAME "/dev/kbuffer_aes3"
 
-/* this is a test program that opens the mmap_drv. It reads out values of the kmalloc() and vmalloc()
+/* this is a test program that opens the mmap_drv. It reads out values of the kmalloc()
    allocated areas and checks for correctness. You need a device special file to access the driver.
-   The device special file is called 'node' and searched in the current directory.
+   The device special file is called 'kbuffer_aes3' and searched in the current directory.
    To create it load the driver 'insmod mmap_mod.o' find the major number assigned to the driver
    'grep mmapdrv /proc/devices' and create the special file (assuming major number 254)
    'mknod node c 254 0'

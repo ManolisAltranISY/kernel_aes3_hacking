@@ -1,0 +1,3 @@
+/home/manolis/Thales_BB/rpi_exercise/linux_kernel_exercises/add_all/lkm_exercise5_preamble_detection/k_preamble.ko
+/home/manolis/Thales_BB/rpi_exercise/linux_kernel_exercises/add_all/lkm_exercise5_preamble_detection/k_preamble.o
+

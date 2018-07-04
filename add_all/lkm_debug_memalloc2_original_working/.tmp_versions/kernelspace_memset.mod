@@ -1,0 +1,3 @@
+/home/manolis/Thales_BB/rpi_exercise/linux_kernel_exercises/add_all/lkm_debug_memalloc2_original_working/kernelspace_memset.ko
+/home/manolis/Thales_BB/rpi_exercise/linux_kernel_exercises/add_all/lkm_debug_memalloc2_original_working/kernelspace_memset.o
+

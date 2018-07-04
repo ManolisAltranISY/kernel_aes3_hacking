@@ -21,28 +21,6 @@ static int *kmalloc_area = NULL;
 
 int count = 0;
 
-static DEFINE_MUTEX(kbuffer_aes3_mutex);
-
-static int kbuffer_aes3_release(struct inode *inodep, struct file *filep)
-{
-    mutex_unlock(&kbuffer_aes3_mutex);
-    pr_info("kbuffer_aes3: Device successfully closed\n");
-    return 0;
-}
-
-static int kbuffer_aes3_open(struct inode *inodep, struct file *filep)
-{
-    int ret = 0;
-
-    if(!mutex_trylock(&kbuffer_aes3_mutex)) {
-        pr_alert("kbuffer_aes3: device busy!\n");
-        ret = -EBUSY;
-    }
-
-    pr_info("kbuffer_aes3: Device opened\n");
-    return ret;
-}
-
 /*  mmap handler to map kernel space to user space */
 static int kbuffer_aes3_mmap(struct file *filp, struct vm_area_struct *vma)
 {
@@ -76,9 +54,7 @@ static ssize_t kbuffer_aes3_read(struct file *filep, char *buffer, size_t len, l
 }
 
 static const struct file_operations kbuffer_aes3_fops = {
-    .open = kbuffer_aes3_open,
     .read = kbuffer_aes3_read,
-    .release = kbuffer_aes3_release,
     .mmap = kbuffer_aes3_mmap,
     /*.unlocked_ioctl = kbuffer_aes3_ioctl,*/
     .owner = THIS_MODULE,
@@ -124,13 +100,11 @@ static int __init kbuffer_aes3_init(void)
         ret = -ENOMEM;
     }
     sprintf(shared_memory, "xyz\n");
-    mutex_init(&kbuffer_aes3_mutex);
     return ret;
 }
 
 static void __exit kbuffer_aes3_exit(void)
 {
-    mutex_destroy(&kbuffer_aes3_mutex);
     device_destroy(class, MKDEV(major, 0));
     class_unregister(class);
     class_destroy(class);
