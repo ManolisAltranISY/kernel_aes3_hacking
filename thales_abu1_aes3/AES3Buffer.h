@@ -1,0 +1,9 @@
+int circular_buf_empty();
+int circular_buf_full();
+int circular_buf_reset();
+int circular_buf_put();
+int circular_buf_get();
+void calibrate_circular_buffer();
+void preamble_detection();
+void aline_circular_buffer();
+void check_calibration();
