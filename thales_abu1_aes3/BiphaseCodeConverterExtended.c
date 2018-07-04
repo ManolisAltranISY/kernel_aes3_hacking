@@ -39,6 +39,7 @@ int main ()
 
     static int current_stage_of_subframe = LEFT_CHANNEL;
     static int count = 0;
+    static int count_2 = 0; //used for isolating audio information
 
     static int previous_state = START_OF_CYCLE;
     static int time_measured[10] = {L_TIME, S_TIME, S_TIME, L_TIME, S_TIME, S_TIME, L_TIME, L_TIME, S_TIME, S_TIME};
@@ -85,7 +86,7 @@ int main ()
       else if (current_stage_of_subframe == SUBFRAME_EMPTY_1)
       {
         count++;
-        if (count>191)
+        if (count>191) //used to pass the 192 empty bits (3 Empty)
         {
           count = 0;
           current_stage_of_subframe = RIGHT_CHANNEL;
@@ -94,7 +95,7 @@ int main ()
       else if (current_stage_of_subframe == SUBFRAME_EMPTY_2)
       {
         count++;
-        if (count>447)
+        if (count>447) //used to pass the 447 empty bits (7 Empty)
         {
           count = 0;
           current_stage_of_subframe = LEFT_CHANNEL;
