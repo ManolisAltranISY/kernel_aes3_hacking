@@ -55,6 +55,11 @@ static int convert_biphase_to_ttl(void);
 /// Function prototype for the custom IRQ handler function -- see below for the implementation
 static irq_handler_t  gpio_irq_handler(unsigned int irq, void *dev_id, struct pt_regs *regs);
 
+static struct file_operations fops =
+{
+  // whatever
+};
+
 static int result = 0;
 
 static int __init hello_init(void){
@@ -144,6 +149,11 @@ static int dev_release(struct inode *inodep, struct file *filep){
 
 static irq_handler_t gpio_irq_handler(unsigned int irq, void *dev_id, struct pt_regs *regs){
   latest_value = gpio_get_value(gpioAES3);
+
+  count++;
+  if(count > 64) {
+    convert_biphase_to_ttl();
+  }
   preamble_detection(latest_value);
   return (irq_handler_t) IRQ_HANDLED;      // Announce that the IRQ has been handled correctly
 }
@@ -171,9 +181,10 @@ static int convert_biphase_to_ttl(){
         printk(KERN_INFO "The value is %d\n", value);
       }
   }
+  return 1;
 }
 
-static int preamble_detection(static int latest_value){
+static int preamble_detection(unsigned int latest_value){
   for (count = 0; count < 8; count++){
     latest_eight_digits [8-count] = latest_eight_digits [8 - count - 1];
   }

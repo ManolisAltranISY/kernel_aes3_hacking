@@ -74,15 +74,16 @@ int main ()
             count = 0;
             if (current_stage_of_subframe == LEFT_CHANNEL)
             {
-              current_stage_of_subframe = RIGHT_CHANNEL;
+              //current_stage_of_subframe = RIGHT_CHANNEL;
+              current_stage_of_subframe = SUBFRAME_EMPTY_1;
             }
             else
             {
-              current_stage_of_subframe = LEFT_CHANNEL;
+              //current_stage_of_subframe = LEFT_CHANNEL;
+              current_stage_of_subframe = SUBFRAME_EMPTY_2;
             }
           }
       }
-
       else if (current_stage_of_subframe == SUBFRAME_EMPTY_1)
       {
         count++;
@@ -108,6 +109,7 @@ int main ()
         }
       }
     }
+
 }
 
 void int preamble_detection(&time_measured){
