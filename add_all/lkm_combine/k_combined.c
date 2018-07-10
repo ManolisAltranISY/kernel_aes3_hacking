@@ -41,22 +41,23 @@ MODULE_VERSION("0.1");
 #define START_OF_CYCLE 0
 #define MID_CYCLE 1
 
+//length of the two memory areas
+#define NPAGES 16
+
 /* character device structure for mmap */
 static dev_t mmap_dev;
 static struct cdev mmap_cdev;
 static struct class *mmap_class;
 static struct device *mmap_device;
-/* methods of the character device */
+//methods of the character device
 static int mmap_mmap(struct file *filp, struct vm_area_struct *vma);
-/* the file operations, i.e. all character device methods */
+//the file operations, i.e. all character device methods
 static struct file_operations mmap_fops = {
         .mmap = mmap_mmap,
 };
-// length of the two memory areas
-#define NPAGES 16
-// pointer to the kmalloc'd area, rounded up to a page boundary
+//pointer to the kmalloc'd area, rounded up to a page boundary
 static int *kmalloc_area;
-// original pointer for kmalloc'd area as returned by kmalloc
+//original pointer for kmalloc'd area as returned by kmalloc
 static void *kmalloc_ptr;
 static int *kmalloc_ptri;
 
@@ -158,8 +159,6 @@ static int __init hello_init(void){
     getnstimeofday(&ts_last); //last time to be the current time
     ts_diff = timespec_sub(ts_last, ts_last); //initial time difference to 0
 
-    int ret = 0;
-    int i;
     /* allocate a memory area with kmalloc. Will be rounded up to a page boundary */
     if ((kmalloc_ptr = kmalloc((NPAGES + 2) * PAGE_SIZE, GFP_KERNEL)) == NULL) {
         ret = -ENOMEM;
@@ -198,9 +197,9 @@ static int __init hello_init(void){
                 kmalloc_area[i] = (0xdeed << 16) + i;
                 kmalloc_area[i + 1] = (0xbaaf << 16) + i;
             }
-      }
+       }
   }
-    return 0;
+  return 0;
 }
 
 static void __exit hello_exit(void){

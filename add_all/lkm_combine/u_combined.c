@@ -37,7 +37,7 @@ int main(void)
 		perror("mmap");
 		exit(-1);
 	}
-  printf("0x%x 0x%x\n", kadr[0], kadr[1]);
+  printf("0x%x 0x%x 0x%x 0x%x\n", kadr[0], kadr[1]);
 	if ((kadr[0]!=0xdead0000) || (kadr[1]!=0xbeef0000)
 			|| (kadr[len / sizeof(int) - 2] != (0xdead0000 + len / sizeof(int) - 2))
 			|| (kadr[len / sizeof(int) - 1] != (0xbeef0000 + len / sizeof(int) - 2)))
