@@ -6,23 +6,6 @@
 #include <linux/fs.h>
 #include <linux/gpio.h>
 #include <linux/interrupt.h>
-#include <linux/slab.h> //kmalloc & kfree stuff
-
-// Device & class
-#define  DEVICE_NAME "aes3_conversion"    ///< The device will appear at /dev/ebbchar using this value
-#define  CLASS_NAME  "aes3"        ///< The device class -- this is a character device driver
-
-// Biphase to TTL conversion
-#define L_TIME  1
-#define S_TIME  0
-#define START_OF_CYCLE 0
-#define MID_CYCLE 1
-
-// Ignoring unpopulated bits
-#define LEFT_CHANNEL 0
-#define SUBFRAME_EMPTY_1 1
-#define RIGHT_CHANNEL 2
-#define SUBFRAME_EMPTY_2 3
 
 // Declaring module parameters
 MODULE_LICENSE("GPL");
