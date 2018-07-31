@@ -12,7 +12,7 @@
 // Declaring module parameters
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("EMMANOUIL NIKOLAKAKIS");
-MODULE_DESCRIPTION("Interrupt Driven GPIO");
+MODULE_DESCRIPTION("AES3 Conversion");
 MODULE_VERSION("0.1");
 
 static char aes3_buffer[8] = (0);
